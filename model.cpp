@@ -310,6 +310,19 @@ HRESULT CModel::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float 
 				&pModels[16].m_dwNumMat,
 				&pModels[16].m_pMesh);
 		}
+
+		if (nTex == 17)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\sword.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[17].m_pBuffMat,
+				NULL,
+				&pModels[17].m_dwNumMat,
+				&pModels[17].m_pMesh);
+		}
 	}
 
 	D3DXMATERIAL *pMat; //マテリアルへのポインタ

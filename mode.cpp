@@ -841,21 +841,21 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 		return -1;
 	}
 	
-	if (m_pEnemy == NULL)
-	{//敵の生成
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(2600.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
-	}
-	else
-	{
-		return -1;
-	}
+	//if (m_pEnemy == NULL)
+	//{//敵の生成
+	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(2600.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
+	//}
+	//else
+	//{
+	//	return -1;
+	//}
 
 
 	//NULLチェック
 	if (m_pPlayer == NULL)
 	{
 		//プレイヤーの生成
-		m_pPlayer = CPlayer::Create(D3DXVECTOR3(2900.0f, 2.0f, -10.0f), D3DX_PI * 0.5f, 1, 20.0f, 20.0f);
+		m_pPlayer = CPlayer::Create(D3DXVECTOR3(-2600.0f, 2.0f, -10.0f), D3DX_PI * -0.5f, 1, 20.0f, 20.0f);
 	}
 	else
 	{

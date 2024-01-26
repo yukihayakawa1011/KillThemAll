@@ -10,7 +10,7 @@
 #include "main.h"
 #include "object.h"
 
-#define MAX_PART		  (17)		//パーツ最大数
+#define MAX_PART		  (18)		//パーツ最大数
 
 class CModel 
 {

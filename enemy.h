@@ -110,7 +110,7 @@ public:
 	bool GetDeath(void);
 	void SetDeath(bool bDeath,int nEnemy);
 
-	int GetCnt(void);
+	/*int GetCnt(void);*/
 	void SetCnt(int nCnt);
 
 	//ƒ‚[ƒVƒ‡ƒ“
