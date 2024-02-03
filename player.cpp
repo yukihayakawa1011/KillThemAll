@@ -19,9 +19,13 @@
 #include "particle.h"
 #include "time.h"
 #include "mode.h"
+#include "gage.h"
 
 //静的メンバ変数宣言
 LPDIRECT3DTEXTURE9  CPlayer::m_pTexture;
+CGage* CPlayer::m_Gage_Life = NULL;			//ライフゲージを初期化
+CGage* CPlayer::m_Gage_Blood = NULL;			//血ゲージを初期化
+
 //============================
 //コンストラクタ
 //============================
@@ -39,7 +43,7 @@ CPlayer::CPlayer()
 	m_ShotRot = 0.0f;											//弾の方向をクリア
 	m_bRot = false;												//プレイヤーの向きをクリア
 	m_bAim = false;												//プレイヤーがエイムしてるかどうかをクリア
-	m_nLife = 0;												//プレイヤーの体力をクリア
+	m_fLife = 0.0f;												//プレイヤーの体力をクリア
 	m_PlayerState = PLAYER_NONE;								//プレイヤーの状態をクリア
 	m_stateCol = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);				//色をクリア
 	m_nCntState = 0;											//プレイヤー状態カウントをクリア
@@ -75,6 +79,10 @@ CPlayer::CPlayer()
 	m_bUnfare = false;			//unfair攻撃を使用するかをクリア
 
 	m_nKill = false;			//何人倒したかをクリア
+
+	m_Gage_Life = NULL;
+
+	m_Gage_Blood = NULL;
 
 	/*プレイヤー通常変数のクリア
 	m_NoneMat.MatD3D.Ambient = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
@@ -147,6 +155,10 @@ CPlayer *CPlayer::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, fl
 	////テクスチャの割り当て
 	//pPlayer->BindTexture(m_pTexture);
 
+	m_Gage_Life = CGage::Create(D3DXVECTOR3(10.0f, 40.0f, 0.0f), 0.0f, 0);
+
+	m_Gage_Blood = CGage::Create(D3DXVECTOR3(10.0f, 80.0f, 0.0f), 0.0f, 1);
+
 	return pPlayer;
 }
 
@@ -197,7 +209,7 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 
 	m_ShotRot = 50.0f;   //弾の方向を初期化
 
-	m_nLife = 3;		 //ライフを初期化
+	m_fLife = 200.0f;		 //ライフを初期化
 
 	m_PlayerState = PLAYER_NONE;	//プレイヤーの状態を初期化
 
@@ -368,7 +380,7 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 
 	m_fHeight = fHeight;
 
-	SetLife(m_nLife);
+	SetLife(m_fLife);
 
 	SetState(m_PlayerState);
 
@@ -442,55 +454,64 @@ void CPlayer::Update(void)
 
 		CEnemy *pEnemy = CGame::GetEnemy();
 
-		//敵をスポーンさせる処理
-		if (pos.x < 2200.0f && m_bSpawn == false && m_nKill == 1)
-		{
-			pEnemy->Create(D3DXVECTOR3(2000.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
+		if (pInputKeyboard->GetPless(DIK_M) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
+		{//Aキーが押された
 
-			pEnemy->SetDeath(false, m_nEnemy);
+			AddDamage(1);
 
-			m_bSpawn = true;
+			m_Gage_Life->SetGageLife(m_fLife);
+			
 		}
 
-		//敵をスポーンさせる処理
-		if (pos.x < 1400.0f && m_bSpawn == false && m_nKill == 2)
-		{
-			pEnemy->Create(D3DXVECTOR3(1200.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
+		////敵をスポーンさせる処理
+		//if (pos.x < 2200.0f && m_bSpawn == false && m_nKill == 1)
+		//{
+		//	pEnemy->Create(D3DXVECTOR3(2000.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
 
-			pEnemy->SetDeath(false, m_nEnemy);
+		//	pEnemy->SetDeath(false, m_nEnemy);
 
-			m_bSpawn = true;
-		}
+		//	m_bSpawn = true;
+		//}
 
-		//敵をスポーンさせる処理
-		if (pos.x < 0.0f && m_bSpawn == false && m_nKill == 3)
-		{
-			pEnemy->Create(D3DXVECTOR3(-500.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
+		////敵をスポーンさせる処理
+		//if (pos.x < 1400.0f && m_bSpawn == false && m_nKill == 2)
+		//{
+		//	pEnemy->Create(D3DXVECTOR3(1200.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
 
-			pEnemy->SetDeath(false, m_nEnemy);
+		//	pEnemy->SetDeath(false, m_nEnemy);
 
-			m_bSpawn = true;
-		}
+		//	m_bSpawn = true;
+		//}
 
-		//敵をスポーンさせる処理
-		if (pos.x < -1000.0f && m_bSpawn == false && m_nKill == 4)
-		{
-			pEnemy->Create(D3DXVECTOR3(-1500.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
+		////敵をスポーンさせる処理
+		//if (pos.x < 0.0f && m_bSpawn == false && m_nKill == 3)
+		//{
+		//	pEnemy->Create(D3DXVECTOR3(-500.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
 
-			pEnemy->SetDeath(false, m_nEnemy);
+		//	pEnemy->SetDeath(false, m_nEnemy);
 
-			m_bSpawn = true;
-		}
+		//	m_bSpawn = true;
+		//}
 
-		//敵をスポーンさせる処理
-		if (pos.x < -2000.0f && m_bSpawn == false && m_nKill == 5)
-		{
-			pEnemy->Create(D3DXVECTOR3(-2500.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
+		////敵をスポーンさせる処理
+		//if (pos.x < -1000.0f && m_bSpawn == false && m_nKill == 4)
+		//{
+		//	pEnemy->Create(D3DXVECTOR3(-1500.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
 
-			pEnemy->SetDeath(false, m_nEnemy);
+		//	pEnemy->SetDeath(false, m_nEnemy);
 
-			m_bSpawn = true;
-		}
+		//	m_bSpawn = true;
+		//}
+
+		////敵をスポーンさせる処理
+		//if (pos.x < -2000.0f && m_bSpawn == false && m_nKill == 5)
+		//{
+		//	pEnemy->Create(D3DXVECTOR3(-2500.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
+
+		//	pEnemy->SetDeath(false, m_nEnemy);
+
+		//	m_bSpawn = true;
+		//}
 
 		int nState = 0;
 		m_PlayerState = GetState();
@@ -761,16 +782,16 @@ void CPlayer::Update(void)
 		///*SetBuff(Buff);*/
 
 
-		////感染度が100になると死ぬ処理
-		//if (pTime->Get() == 100)
-		//{
-		//	//パーティクルの生成
-		//	CParticle::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 0.0f, 1, 1.0f, 1.0f);
+		//感染度が100になると死ぬ処理
+		if (m_fLife <= 0.0f)
+		{
+			//パーティクルの生成
+			CParticle::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 0.0f, 1, 1.0f, 1.0f);
 
-		//	m_bDeath = true;
+			m_bDeath = true;
 
-		//	SetDeath(m_bDeath);
-		//}
+			SetDeath(m_bDeath);
+		}
 
 #ifdef _DEBUG
 		int nAttack = 0;
@@ -841,7 +862,7 @@ void CPlayer::Update(void)
 		//プレイヤーのジャンプデバック情報
 		pDebug->Print("プレイヤーのジャンプ : %d\n", nJump);
 
-		pDebug->Print("プレイヤーの体力 :: %d\n", m_nLife);
+		pDebug->Print("プレイヤーの体力 :: %f\n", m_fLife);
 #endif
 
 		SetPlayerRot(m_bRot);
@@ -6615,7 +6636,7 @@ bool CPlayer::HitPlayer(bool bDeath)
 						/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);*/
 						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);
 
-						if (m_nLife <= 1)
+						if (m_fLife <= 1)
 						{
 							//死んだことにする
 							bDeath = true;
@@ -6737,17 +6758,17 @@ bool CPlayer::GetPlayerAim(void)
 ////============================
 //プレイヤーのライフセット
 ////============================
-void CPlayer::SetLife(int nLife)
+void CPlayer::SetLife(float fLife)
 {
-	m_nLife = nLife;
+	m_fLife = fLife;
 }
 
 ////============================
 //プレイヤーのライフ受け渡す
 ////============================
-int CPlayer::GetLife(void)
+float CPlayer::GetLife(void)
 {
-	return m_nLife;
+	return m_fLife;
 }
 
 ////============================
@@ -6775,8 +6796,8 @@ void CPlayer::SetMotionPlayer(MOTIONTYPE nType)
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotX = -0.1f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotY = -0.9f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotX = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotZ = 0.0f;
 
 			//ふたつ目のパーツ(体)
@@ -6784,133 +6805,142 @@ void CPlayer::SetMotionPlayer(MOTIONTYPE nType)
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotY = 0.4f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotX = -0.2f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotZ = 0.0f;
 
-			//みっつ目のパーツ(頭)	 m_nKey
+			//みっつ目のパーツ(頭)
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosZ = 0.0f;
 
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotY = 0.4f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotZ = 0.0f;
 
-			//よっつ目のパーツ(左肩)	
+			//よっつ目のパーツ(左肩)
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotX = 1.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotY = -0.7f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotZ = 0.5f;
-
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotX = -0.4f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotY = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotZ = 0.0f;
+									 
 			//いつつ目のパーツ(左腕)	
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosZ = 0.0f;
-
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotX = -0.9f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotY = -0.1f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotZ = -0.2f;
-
-			//むっつ目のパーツ(左手)	m_nKey
+									 
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotX = -0.2f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotY = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotZ = 0.0f;
+									 
+			//むっつ目のパーツ(左手)	
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosZ = 0.0f;
-
+									
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotY = 0.9f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotZ = 0.0f;
-
+									
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosZ = 0.0f;
-
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotX = 1.1f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotY = 0.6f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotZ = -0.2f;
-
+									  
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotX = 0.3f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotY = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotZ = 0.0f;
+									
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosZ = 0.0f;
-
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotX = -0.7f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotY = -0.2f;
+									  
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotX = -0.2f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotZ = 0.0f;
-
+									 
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosZ = 0.0f;
-
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotX = -0.4f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotY = 0.1f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotZ = 0.1f;
-
+									
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotX = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotY = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotZ = 0.0f;
+									 
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosZ = 0.0f;
-
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotX = 0.0f;
+									 
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotX = 0.9f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotY = 0.2f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotZ = -0.7f;
-
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotZ = -1.4f;
+									 
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosZ = 0.0f;
-
+									  
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotY = 1.6f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotZ = 0.0f;
-
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotY = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotZ = -0.5f;
+									
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosZ = 0.0f;
-
+									  
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotY = 0.8f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotZ = 0.0f;
-
+									  
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosZ = 0.0f;
-
+									 
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotZ = 0.0f;
-
+									
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosZ = 0.0f;
-
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotY = -0.3f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotZ = 0.9f;
-
+									  
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotX = -0.4f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotY = -1.4f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotZ = 1.2f;
+									 
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosZ = 0.0f;
-
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotY = -0.2f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotZ = 0.2f;
-
+									
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotX = -1.2f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotY = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotZ = -0.8f;
+									  
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosZ = 0.0f;
-
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotY = -0.8f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotZ = 0.0f;
-
+									
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotX = 0.9f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotY = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotZ = -0.7f;
+									
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosZ = 0.0f;
-
+									
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotZ = 0.0f;
+									
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fPosX = -3.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fPosY = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fPosZ = 0.0f;
+								
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fRotX = 0.1f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fRotY = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fRotZ = -0.7f;
+		
 		
 		break;
 
@@ -7947,11 +7977,11 @@ void CPlayer::SetMotionPlayer(MOTIONTYPE nType)
 //========================
 void CPlayer::AddDamage(int nDamage)
 {
-	m_nLife = m_nLife - nDamage;
+	m_fLife = m_fLife - nDamage;
 
 	m_PlayerState = PLAYER_DAMAGE;
 
-	SetLife(m_nLife);
+	SetLife(m_fLife);
 
 	SetState(m_PlayerState);
 }

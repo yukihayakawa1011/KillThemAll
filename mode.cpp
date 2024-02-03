@@ -29,9 +29,9 @@
 //#include "infection.h"
 #include "mode.h"
 #include "pause.h"
+#include "gage.h"
 
 CPlayer *CGame::m_pPlayer = NULL;					//プレイヤー情報を初期化
-CPlayer *CGame::m_pPlayerMirror = NULL;					//プレイヤー情報を初期化
 CExplosion *CGame::m_pExplosion = NULL;				//爆発情報を初期化
 CEnemy *CGame::m_pEnemy = NULL;						//敵情報を初期化
 CAbg *CGame::m_pAbg = NULL;							//多重背景を初期化
@@ -810,10 +810,10 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 							/*InitShadow();*/
 
 							//NULLチェック
+
 	if (m_pBlock == NULL)
 	{
 		//ゴールブロックの生成
-		m_pBlock = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 100.0f), 0.0f, 0, 50.0f, 50.0f);
 		m_pBlock = CBlock::Create(D3DXVECTOR3(-2800.0f, 0.0f, 20.0f), 0.0f, 3, 50.0f, 50.0f);
 	}
 	else
@@ -821,15 +821,15 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 		return -1;
 	}
 
-	if (m_pObject3dwall == NULL)
-	{
-		////オブジェクト3Dの生成
-		m_pObject3dwall = CObject3d::Create(D3DXVECTOR3(0.0f,-50.0f, 300.0f), 0.0f, 0, 4000.0f, 2000.0f);
-	}
-	else
-	{
-		return -1;
-	}
+	//if (m_pObject3dwall == NULL)
+	//{
+	//	////オブジェクト3Dの生成
+	//	m_pObject3dwall = CObject3d::Create(D3DXVECTOR3(0.0f,-50.0f, 300.0f), 0.0f, 0, 4000.0f, 2000.0f);
+	//}
+	//else
+	//{
+	//	return -1;
+	//}
 
 	if (m_pObject3dfloar == NULL)
 	{
@@ -867,7 +867,6 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	//	//スコアの生成
 	//	m_pScore = CScore::Create(D3DXVECTOR3(300.0f, 700.0f, 0.0f), 0.0f, 0);
 	//}
-	////CBilboard::Create(D3DXVECTOR3(-400.0f, 0.0f, 0.0f), 0.0f, 0, 200.0f, 200.0f);
 
 	//カメラの生成
 	if (m_pCamera == NULL)
@@ -1443,14 +1442,6 @@ void CGameOver::Draw(void)
 CPlayer *CGame::GetPlayer(void)
 {
 	return m_pPlayer;
-}
-
-//============================
-//プレイヤーミラー情報取得
-//============================
-CPlayer *CGame::GetPlayerMirror(void)
-{
-	return m_pPlayerMirror;
 }
 
 //============================

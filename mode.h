@@ -103,7 +103,6 @@ public:
 
 	
 	static CPlayer *GetPlayer(void);
-	static CPlayer *GetPlayerMirror(void);
 	static CExplosion *GetExplosion(void);
 	static CEnemy *GetEnemy(void);
 	static CAbg *GetAbg(void);
@@ -116,11 +115,10 @@ public:
 	static CObjectx *GetObjectx(void);
 	static CModel *GetModel(void);
 	static CInfection *GetInfection(void);
-	static CObject3d *GetObject3d(void);
+	static CObject3d* GetObject3d(void);
 
 private:
 	static CPlayer *m_pPlayer;					//プレイヤーの情報
-	static CPlayer *m_pPlayerMirror;			//プレイヤーミラーの情報
 	static CExplosion *m_pExplosion;			//爆発の情報
 	static CEnemy *m_pEnemy;					//敵情報
 	static CAbg *m_pAbg;						//多重背景情報
@@ -137,6 +135,7 @@ private:
 	static CObject3d *m_pObject3dwall;				//オブジェクト3d情報
 	static CPause *m_pPause;					//ポーズの情報
 	bool m_bPause;								//ポーズ状態のON/OFF
+
 };
 
 class CResult : public CScene

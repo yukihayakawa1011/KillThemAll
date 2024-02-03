@@ -10,6 +10,8 @@
 #include "bilboard.h"
 #include "objectx.h"
 #include "model.h"
+
+class CGage;
 //#include "motion.h"
 //#include "shadow.h"
 
@@ -130,16 +132,18 @@ public:
 
 	void SetPlayerAim(bool bAim);
 	bool GetPlayerAim(void);
-	void SetLife(int nLife);
+	void SetLife(float fLife);
 	void SetState(PLAYER_STATE state);
 
-	int GetLife(void);
+	float GetLife(void);
 	PLAYER_STATE GetState(void);
 
 	void AddDamage(int nDamage);
 
 	//モーション
 	void SetMotionPlayer(MOTIONTYPE nType);
+
+	static CGage* GetGage(void);
 
 private:
 	static LPDIRECT3DTEXTURE9 m_pTexture;		//共有テクスチャ
@@ -152,7 +156,7 @@ private:
 	float m_fHeight;							//プレイヤー高さ
 
 	//D3DXCOLOR m_col;							//色
-	int m_nLife;								//体力
+	float m_fLife;								//体力
 	//LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;			//頂点バッファへのポインタ
 
 	D3DXMATRIX m_mtxWorld;						//ワールドマトリックス
@@ -206,6 +210,9 @@ private:
 	bool m_bUnfare;					//unfair攻撃を使おうとしてるか
 
 	int m_nKill;					//何人倒したか
+
+	static CGage* m_Gage_Life;					//プレイヤー体力
+	static CGage* m_Gage_Blood;					//血
 };
 
 #endif
