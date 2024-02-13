@@ -44,6 +44,7 @@ CPlayer::CPlayer()
 	m_bRot = false;												//プレイヤーの向きをクリア
 	m_bAim = false;												//プレイヤーがエイムしてるかどうかをクリア
 	m_fLife = 0.0f;												//プレイヤーの体力をクリア
+	m_fBlood = 0.0f;												//プレイヤーの体力をクリア
 	m_PlayerState = PLAYER_NONE;								//プレイヤーの状態をクリア
 	m_stateCol = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);				//色をクリア
 	m_nCntState = 0;											//プレイヤー状態カウントをクリア
@@ -210,6 +211,7 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 	m_ShotRot = 50.0f;   //弾の方向を初期化
 
 	m_fLife = 200.0f;		 //ライフを初期化
+	m_fBlood = 200.0f;		 //ライフを初期化
 
 	m_PlayerState = PLAYER_NONE;	//プレイヤーの状態を初期化
 
@@ -419,6 +421,30 @@ void CPlayer::Update(void)
 {
 	if (m_bDeath == false)
 	{
+		m_fBlood -= 0.02f;
+
+		m_Gage_Blood->SetGageBlood(m_fBlood);
+
+		if (m_fBlood <= 0.0f)
+		{
+			m_fBlood = 0.0f;
+		}
+
+		if (m_fLife <= 0.0f)
+		{
+			m_fLife = 0.0f;
+		}
+
+		if (m_fBlood >= 200.0f)
+		{
+			m_fBlood = 200.0f;
+		}
+
+		if (m_fLife >= 200.0f)
+		{
+			m_fLife = 200.0f;
+		}
+
 		//////高さを取得
 		////m_fHeight = CObject3d::get
 
@@ -453,15 +479,7 @@ void CPlayer::Update(void)
 		//m_pMotion->Update();
 
 		CEnemy *pEnemy = CGame::GetEnemy();
-
-		if (pInputKeyboard->GetPless(DIK_M) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
-		{//Aキーが押された
-
-			AddDamage(1);
-
-			m_Gage_Life->SetGageLife(m_fLife);
-			
-		}
+		
 
 		////敵をスポーンさせる処理
 		//if (pos.x < 2200.0f && m_bSpawn == false && m_nKill == 1)
@@ -534,6 +552,18 @@ void CPlayer::Update(void)
 							{
 								SetMotionPlayer(MOTIONTYPE_MOVE);
 							}
+							if (pInputKeyboard->GetPless(DIK_B) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
+							{//Aキーが押された
+
+								if (m_fBlood > 0.0f)
+								{
+									m_fBlood -= 1.0f;
+
+									m_Gage_Blood->SetGageBlood(m_fBlood);
+
+									move.x = -10.0f;
+								}
+							}
 						}
 
 						else if (pInputKeyboard->GetPless(DIK_D) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) >= 1)
@@ -545,6 +575,19 @@ void CPlayer::Update(void)
 							if (m_nType != MOTIONTYPE_MOVE)
 							{
 								SetMotionPlayer(MOTIONTYPE_MOVE);
+							}
+
+							if (pInputKeyboard->GetPless(DIK_B) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
+							{//Aキーが押された
+
+								if (m_fBlood > 0.0f)
+								{
+									m_fBlood -= 1.0f;
+
+									m_Gage_Blood->SetGageBlood(m_fBlood);
+
+									move.x = +10.0f;
+								}
 							}
 						}
 
@@ -591,6 +634,28 @@ void CPlayer::Update(void)
 						{
 							m_bAttack = false;
 						}
+
+						if (pInputKeyboard->GetRelease(DIK_A) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
+						{//Aキーが押された
+
+							m_bRot = false;
+
+							if (m_nType != MOTIONTYPE_NEUTRAL)
+							{
+								SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+							}
+						}
+
+						else if (pInputKeyboard->GetRelease(DIK_D) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) >= 1)
+						{//Dキーが押された
+							
+							m_bRot = true;
+
+							if (m_nType != MOTIONTYPE_NEUTRAL)
+							{
+								SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+							}
+						}
 					}
 
 					if (pInputKeyboard->GetPless(DIK_K) == true || pInputGamepad->GetPless(pInputGamepad->BUTTON_LB, 0) == true)
@@ -599,7 +664,7 @@ void CPlayer::Update(void)
 						m_bUnfare = true;
 
 						//プレイヤーのパンチをしたかどうか
-						if (pInputKeyboard->GetTrigger(DIK_U) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+						if (pInputKeyboard->GetPless(DIK_U) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 						{
 							/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
 							{
@@ -607,6 +672,14 @@ void CPlayer::Update(void)
 
 							if (m_nType != MOTIONTYPE_UNFAIR_PUNCH)
 							{
+								AddDamage(10);
+
+								m_Gage_Life->SetGageLife(m_fLife);
+
+								m_fBlood += 10.0f;
+
+								m_Gage_Blood->SetGageBlood(m_fBlood);
+
 								CSound::PlaySound(CSound::SOUND_LABEL_SE_UNFAIR);
 
 								HitEnemyUnfarePunch(m_bDeath);
@@ -621,7 +694,7 @@ void CPlayer::Update(void)
 							/*}*/
 						}
 						//プレイヤーのパンチをしたかどうか
-						else if (pInputKeyboard->GetTrigger(DIK_J) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_B, 0) == true)
+						else if (pInputKeyboard->GetPless(DIK_J) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_B, 0) == true)
 						{
 							/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
 							{
@@ -629,7 +702,13 @@ void CPlayer::Update(void)
 
 							if (m_nType != MOTIONTYPE_UNFAIR_KICK)
 							{
-								HitEnemyUnfareKick(m_bDeath);
+								m_fLife += 10.0f;
+
+								m_Gage_Life->SetGageLife(m_fLife);
+
+								m_fBlood -= 10.0f;
+
+								m_Gage_Blood->SetGageBlood(m_fBlood);
 								
 								CSound::PlaySound(CSound::SOUND_LABEL_SE_UNFAIR);
 
@@ -863,6 +942,7 @@ void CPlayer::Update(void)
 		pDebug->Print("プレイヤーのジャンプ : %d\n", nJump);
 
 		pDebug->Print("プレイヤーの体力 :: %f\n", m_fLife);
+		pDebug->Print("剣の血 :: %f\n", m_fBlood);
 #endif
 
 		SetPlayerRot(m_bRot);

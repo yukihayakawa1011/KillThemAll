@@ -29,9 +29,13 @@ public:
 	float GetGageLife(void);
 	void SetGageLife(float fLife);
 
+	float GetGageBlood(void);
+	void SetGageBlood(float fBlood);
+
 private:
 	int m_Tex;		//テクスチャ番号を覚える
 	D3DXVECTOR3 m_PosLife; //ゲージの場所
+	D3DXVECTOR3 m_PosBlood; //ゲージの場所
 
 };
 

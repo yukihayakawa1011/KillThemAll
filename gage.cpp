@@ -190,6 +190,17 @@ void CGage::Update(void)
 		pVtx[1].pos = D3DXVECTOR3(m_PosLife.x + 10.0f, 30.0f, 0.0f);
 		pVtx[2].pos = D3DXVECTOR3(10.0f, 50.0f, 0.0f);
 		pVtx[3].pos = D3DXVECTOR3(m_PosLife.x + 10.0f, 50.0f, 0.0f);
+	}
+
+	if (m_Tex == 1)
+	{//テクスチャ1のゲージをライフと直結させる
+
+		//頂点座標の設定
+		pVtx[0].pos = D3DXVECTOR3(10.0f, 70.0f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_PosBlood.x + 10.0f, 70.0f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(10.0f, 90.0f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_PosBlood.x + 10.0f, 90.0f, 0.0f);
+	}
 
 		//デバッグ表示の情報を渡す
 		CDebugProc* pDebug = CManager::GetInstance()->GetDebugProck();
@@ -198,7 +209,7 @@ void CGage::Update(void)
 		////カメラの位置をデバッグ表示
 		//pDebug->Print("感染ゲージ : %f\n", );
 #endif
-	}
+	
 
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
@@ -250,5 +261,21 @@ float CGage::GetGageLife(void)
 void CGage::SetGageLife(float fLife)
 {
 	m_PosLife.x = fLife;
+}
+
+//============================
+//血ゲージの取得
+//============================
+float CGage::GetGageBlood(void)
+{
+	return m_PosBlood.x;
+}
+
+//============================
+//血ゲージの設定
+//============================
+void CGage::SetGageBlood(float fBlood)
+{
+	m_PosBlood.x = fBlood;
 }
 

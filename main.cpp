@@ -11,7 +11,7 @@
 
 //マクロ定義
 #define CLASS_NAME    "WindowClass"        //ウインドウクラスの名前
-#define WINDOW_NAME   "ファイティングドラゴン" //ウインドウの名前（キャプションに表示）
+#define WINDOW_NAME   "Kill Them All" //ウインドウの名前（キャプションに表示）
 
 
 

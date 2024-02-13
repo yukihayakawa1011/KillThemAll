@@ -157,6 +157,7 @@ private:
 
 	//D3DXCOLOR m_col;							//色
 	float m_fLife;								//体力
+	float m_fBlood;								//体力
 	//LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;			//頂点バッファへのポインタ
 
 	D3DXMATRIX m_mtxWorld;						//ワールドマトリックス
