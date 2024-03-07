@@ -29,9 +29,9 @@ CSound::SOUNDINFO m_aSoundInfo[CSound::SOUND_LABEL_MAX] =
 	{ "data/SE/hit.wav",0 },			//倒した音
 	{ "data/SE/punch.wav",0 },			//パンチ音
 	{ "data/SE/kick.wav",0 },			//キック音
-	{ "data/SE/unfair.wav",0 },			//unfair攻撃音
 	{ "data/SE/attack.wav",0 },			//攻撃音
 	{"data/SE/nc105501.wav",0},			//攻撃音
+	{"data/SE/u.wav",0},			//うっボイス
 
 };
 

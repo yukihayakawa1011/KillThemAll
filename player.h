@@ -62,7 +62,7 @@ public:
 		MOTIONTYPE_MOVE,			//移動
 		MOTIONTYPE_PUNCH0,			//パンチ
 		MOTIONTYPE_KICK0,			//キック
-		MOTIONTYPE_UNFAIR_PUNCH,	//unfairパンチ
+		MOTIONTYPE_ADD_BLOOD,	//unfairパンチ
 		MOTIONTYPE_UNFAIR_KICK,		//unfairキック
 		MOTIONTYPE_DAMAGE,			//ダメージ
 		MOTIONTYPE_GURD,			//ガード

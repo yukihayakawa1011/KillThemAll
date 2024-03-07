@@ -11,7 +11,7 @@
 
 //マクロ定義
 #define MAX_PARTICLE (128)		//パーティクル最大数
-#define USE_PARTICLE (20)		//使用しているパーティクル数
+#define USE_PARTICLE (10)		//使用しているパーティクル数
 #define USE_RADIUS	 (10.0f)		//使う半径
 
 class CParticle : public CBilboard

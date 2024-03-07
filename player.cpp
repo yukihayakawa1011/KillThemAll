@@ -541,63 +541,10 @@ void CPlayer::Update(void)
 				{
 					if (m_bUnfare == false)
 					{
-						if (pInputKeyboard->GetPless(DIK_A) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
-						{//Aキーが押された
-
-							move.x = -2.0f;
-
-							m_bRot = false;
-
-							if (m_nType != MOTIONTYPE_MOVE)
-							{
-								SetMotionPlayer(MOTIONTYPE_MOVE);
-							}
-							if (pInputKeyboard->GetPless(DIK_B) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
-							{//Aキーが押された
-
-								if (m_fBlood > 0.0f)
-								{
-									m_fBlood -= 1.0f;
-
-									m_Gage_Blood->SetGageBlood(m_fBlood);
-
-									move.x = -10.0f;
-								}
-							}
-						}
-
-						else if (pInputKeyboard->GetPless(DIK_D) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) >= 1)
-						{//Dキーが押された
-							move.x = 2.0f;
-
-							m_bRot = true;
-
-							if (m_nType != MOTIONTYPE_MOVE)
-							{
-								SetMotionPlayer(MOTIONTYPE_MOVE);
-							}
-
-							if (pInputKeyboard->GetPless(DIK_B) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
-							{//Aキーが押された
-
-								if (m_fBlood > 0.0f)
-								{
-									m_fBlood -= 1.0f;
-
-									m_Gage_Blood->SetGageBlood(m_fBlood);
-
-									move.x = +10.0f;
-								}
-							}
-						}
 
 						//プレイヤーのパンチをしたかどうか
-						else if (pInputKeyboard->GetTrigger(DIK_U) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+						if (pInputKeyboard->GetTrigger(DIK_U) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 						{
-							/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
-							{
-								nPunchSpeed--;*/
-
 							if (m_nType != MOTIONTYPE_PUNCH0)
 							{
 								CSound::PlaySound(CSound::SOUND_LABEL_SE_ATTACKVOICE);
@@ -607,29 +554,64 @@ void CPlayer::Update(void)
 
 								m_bAttack = true;
 							}
-							/*if (nPunchSpeed <= 0)
-							{
-								nPunchSpeed = PLAYER_PUNCH_SPEED;
-							}*/
-							/*}*/
 						}
-						//プレイヤーのパンチをしたかどうか
-						else if (pInputKeyboard->GetTrigger(DIK_J) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_B, 0) == true)
+
+						if (m_bAttack == false)
 						{
-							/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
+						if (pInputKeyboard->GetPless(DIK_A) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
+						{//Aキーが押された
+
+							move.x = -5.0f;
+
+							m_bRot = false;
+
+							if (m_nType != MOTIONTYPE_MOVE)
 							{
-							nPunchSpeed--;*/
+								SetMotionPlayer(MOTIONTYPE_MOVE);
+							}
+							if (pInputKeyboard->GetPless(DIK_B) == true || pInputGamepad->GetPless(pInputGamepad->BUTTON_Y, 0) == true)
+							{//Aキーが押された
 
-							if (m_nType != MOTIONTYPE_KICK0)
-							{
-								CSound::PlaySound(CSound::SOUND_LABEL_SE_ATTACKVOICE);
+								if (m_fBlood > 0.0f)
+								{
+									m_fBlood -= 1.0f;
 
-								HitEnemyKick0(m_bDeath);
-								SetMotionPlayer(MOTIONTYPE_KICK0);
+									m_Gage_Blood->SetGageBlood(m_fBlood);
 
-								m_bAttack = true;
+									move.x = -20.0f;
+
+									CParticle::Create(D3DXVECTOR3(pos.x, pos.y + 20.0f, pos.z), 0.0f, 1, 0.5f, 0.5f);
+								}
 							}
 						}
+
+						else if (pInputKeyboard->GetPless(DIK_D) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) >= 1)
+						{//Dキーが押された
+							move.x = 5.0f;
+
+							m_bRot = true;
+
+							if (m_nType != MOTIONTYPE_MOVE)
+							{
+								SetMotionPlayer(MOTIONTYPE_MOVE);
+							}
+
+							if (pInputKeyboard->GetPless(DIK_B) == true || pInputGamepad->GetPless(pInputGamepad->BUTTON_Y, 0) == true)
+							{//Bキーが押された
+
+								if (m_fBlood > 0.0f)
+								{
+									m_fBlood -= 1.0f;
+
+									m_Gage_Blood->SetGageBlood(m_fBlood);
+
+									move.x = +20.0f;
+
+									CParticle::Create(D3DXVECTOR3(pos.x, pos.y + 20.0f, pos.z), 0.0f, 1, 0.5f, 0.5f);
+								}
+							}
+						}
+
 						else
 						{
 							m_bAttack = false;
@@ -648,7 +630,7 @@ void CPlayer::Update(void)
 
 						else if (pInputKeyboard->GetRelease(DIK_D) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) >= 1)
 						{//Dキーが押された
-							
+
 							m_bRot = true;
 
 							if (m_nType != MOTIONTYPE_NEUTRAL)
@@ -656,76 +638,9 @@ void CPlayer::Update(void)
 								SetMotionPlayer(MOTIONTYPE_NEUTRAL);
 							}
 						}
-					}
-
-					if (pInputKeyboard->GetPless(DIK_K) == true || pInputGamepad->GetPless(pInputGamepad->BUTTON_LB, 0) == true)
-					{
-
-						m_bUnfare = true;
-
-						//プレイヤーのパンチをしたかどうか
-						if (pInputKeyboard->GetPless(DIK_U) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
-						{
-							/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
-							{
-							nPunchSpeed--;*/
-
-							if (m_nType != MOTIONTYPE_UNFAIR_PUNCH)
-							{
-								AddDamage(10);
-
-								m_Gage_Life->SetGageLife(m_fLife);
-
-								m_fBlood += 10.0f;
-
-								m_Gage_Blood->SetGageBlood(m_fBlood);
-
-								CSound::PlaySound(CSound::SOUND_LABEL_SE_UNFAIR);
-
-								HitEnemyUnfarePunch(m_bDeath);
-								SetMotionPlayer(MOTIONTYPE_UNFAIR_PUNCH);
-
-								m_bAttack = true;
-							}
-							/*if (nPunchSpeed <= 0)
-							{
-							nPunchSpeed = PLAYER_PUNCH_SPEED;
-							}*/
-							/*}*/
-						}
-						//プレイヤーのパンチをしたかどうか
-						else if (pInputKeyboard->GetPless(DIK_J) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_B, 0) == true)
-						{
-							/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
-							{
-							nPunchSpeed--;*/
-
-							if (m_nType != MOTIONTYPE_UNFAIR_KICK)
-							{
-								m_fLife += 10.0f;
-
-								m_Gage_Life->SetGageLife(m_fLife);
-
-								m_fBlood -= 10.0f;
-
-								m_Gage_Blood->SetGageBlood(m_fBlood);
-								
-								CSound::PlaySound(CSound::SOUND_LABEL_SE_UNFAIR);
-
-								SetMotionPlayer(MOTIONTYPE_UNFAIR_KICK);
-
-								m_bAttack = true;
-							}
-						}
-						else
-						{
-							m_bAttack = false;
 						}
 					}
-					else
-					{
-						m_bUnfare = false;
-					}
+
 				}
 			}
 
@@ -738,15 +653,91 @@ void CPlayer::Update(void)
 				}
 		
 			//ガード処理
-			if (pInputKeyboard->GetPless(DIK_H) == true || pInputGamepad->GetPless(pInputGamepad->BUTTON_X, 0) == true)
+			if (pInputKeyboard->GetPless(DIK_H) == true || pInputGamepad->GetPless(pInputGamepad->BUTTON_RB, 0) == true)
 			{
 				m_PlayerState = PLAYER_GURD;
 
 				SetMotionPlayer(MOTIONTYPE_GURD);
+
+				//プレイヤーのパンチをしたかどうか
+				if (pInputKeyboard->GetPless(DIK_U) == true || pInputGamepad->GetPless(pInputGamepad->BUTTON_A, 0) == true)
+				{
+					/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
+					{
+					nPunchSpeed--;*/
+
+					if (m_nType != MOTIONTYPE_ADD_BLOOD)
+					{
+						AddDamage(2);
+
+						m_Gage_Life->SetGageLife(m_fLife);
+
+						m_fBlood += 2.0f;
+
+						m_Gage_Blood->SetGageBlood(m_fBlood);
+
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_U);
+
+
+						HitEnemyUnfarePunch(m_bDeath);
+						SetMotionPlayer(MOTIONTYPE_ADD_BLOOD);
+
+						CParticle::Create(D3DXVECTOR3(pos.x - 40.0f, pos.y + 70.0f, pos.z - 10.0f), 0.0f, 1, 10.0f, 10.0f);
+
+						m_bAttack = true;
+					}
+					/*if (nPunchSpeed <= 0)
+					{
+					nPunchSpeed = PLAYER_PUNCH_SPEED;
+					}*/
+					/*}*/
+				}
+				//プレイヤーのパンチをしたかどうか
+				else if (pInputKeyboard->GetPless(DIK_J) == true || pInputGamepad->GetPless(pInputGamepad->BUTTON_Y, 0) == true)
+				{
+					/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
+					{
+					nPunchSpeed--;*/
+
+					if (m_fBlood > 0.0f)
+					{
+						if (m_nType != MOTIONTYPE_UNFAIR_KICK)
+						{
+							m_fLife += 2.0f;
+
+							m_Gage_Life->SetGageLife(m_fLife);
+
+							m_fBlood -= 2.0f;
+
+							m_Gage_Blood->SetGageBlood(m_fBlood);
+
+							SetMotionPlayer(MOTIONTYPE_UNFAIR_KICK);
+
+							CParticle::Create(D3DXVECTOR3(pos.x, pos.y + 50.0f, pos.z), 0.0f, 1, 0.5f, 0.5f);
+
+							m_bAttack = true;
+						}
+					}
+				}
+				//プレイヤーのパンチをしたかどうか
+				else if (pInputKeyboard->GetRelease(DIK_U) == true || pInputGamepad->GetRelease(pInputGamepad->BUTTON_A, 0) == true)
+				{
+					m_bAttack = false;
+				}
+				//プレイヤーのパンチをしたかどうか
+				else if (pInputKeyboard->GetRelease(DIK_J) == true || pInputGamepad->GetRelease(pInputGamepad->BUTTON_Y, 0) == true)
+				{
+					m_bAttack = false;
+				}
 			}
-			else
+			else if(pInputKeyboard->GetRelease(DIK_H) == true || pInputGamepad->GetRelease(pInputGamepad->BUTTON_RB, 0) == true)
 			{
 				m_PlayerState = PLAYER_NONE;
+
+				if (m_nType != MOTIONTYPE_NEUTRAL)
+				{
+					SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+				}
 			}
 
 			if (pos.y > 2000.0f)
@@ -759,6 +750,20 @@ void CPlayer::Update(void)
 			{
 				pos.y = 0.0f;
 				move.y = 1.0f;
+			}
+
+			if (m_bJump == false)
+			{
+				//プレイヤーのジャンプ
+				if (pInputKeyboard->GetTrigger(DIK_SPACE) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_LB, 0) == true)
+				{
+					m_bJump = true;
+
+					move.y += 20.0f;
+
+					SetMove(move);
+
+				}
 			}
 
 
@@ -861,7 +866,7 @@ void CPlayer::Update(void)
 		///*SetBuff(Buff);*/
 
 
-		//感染度が100になると死ぬ処理
+		//ライフがゼロになると死ぬ処理
 		if (m_fLife <= 0.0f)
 		{
 			//パーティクルの生成
@@ -896,7 +901,7 @@ void CPlayer::Update(void)
 		{
 			nState = 3;
 		}
-		if (m_nType == MOTIONTYPE_UNFAIR_PUNCH)
+		if (m_nType == MOTIONTYPE_ADD_BLOOD)
 		{
 			nState = 3;
 		}
@@ -1858,7 +1863,7 @@ case MOTIONTYPE_MOVE:
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosZ = 0.0f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = -0.1f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -0.9f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotZ = 0.0f;
 
 		//ふたつ目のパーツ(体)
@@ -1866,8 +1871,8 @@ case MOTIONTYPE_MOVE:
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosZ = 0.0f;
 
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.4f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = -0.2f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotZ = 0.0f;
 
 		//みっつ目のパーツ(頭)
@@ -1876,7 +1881,7 @@ case MOTIONTYPE_MOVE:
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fPosZ = 0.0f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotX = 0.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.4f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotZ = 0.0f;
 
 		//よっつ目のパーツ(左肩)
@@ -1884,18 +1889,18 @@ case MOTIONTYPE_MOVE:
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosZ = 0.0f;
 
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 1.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = -0.7f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.5f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = -0.1f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.2f;
 
 		//いつつ目のパーツ(左腕)
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosZ = 0.0f;
 
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = -0.9f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotY = -0.1f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotZ = -0.2f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = -0.6f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotZ = 0.0f;
 
 		//むっつ目のパーツ(左手)
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fPosX = 0.0f;
@@ -1903,48 +1908,48 @@ case MOTIONTYPE_MOVE:
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fPosZ = 0.0f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fRotX = 0.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fRotY = 0.9f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fRotY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fRotZ = 0.0f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosZ = 0.0f;
 
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 1.1f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.6f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = -0.3f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = -0.2f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosZ = 0.0f;
 
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.7f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = -0.2f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.6f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotZ = 0.0f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fPosX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fPosZ = 0.0f;
 
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotX = -0.4f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotY = 0.1f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotZ = 0.1f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotX = -0.1f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotZ = 0.0f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosZ = 0.0f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotX = 0.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 0.2f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = -0.7f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = -0.5f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = -1.1f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosZ = 0.0f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotX = 0.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.6f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = -0.1f;
 
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosX = 0.0f;
@@ -1952,8 +1957,8 @@ case MOTIONTYPE_MOVE:
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosZ = 0.0f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = 0.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.8f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 1.3f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = -0.2f;
 
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[12].m_fPosX = 0.0f;
@@ -1968,25 +1973,25 @@ case MOTIONTYPE_MOVE:
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fPosZ = 0.0f;
 
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = 0.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -0.3f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.9f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = -0.4f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -1.4f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 2.2f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosZ = 0.0f;
 
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = 0.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.2f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.2f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = -0.8f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = -0.1f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosZ = 0.0f;
 
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = 0.0f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = -0.8f;
-		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = 0.9f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = -1.3f;
 
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosY = 0.0f;
@@ -1995,6 +2000,14 @@ case MOTIONTYPE_MOVE:
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fRotX = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fRotY = 0.0f;
 		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fRotZ = 0.0f;
+
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fPosX = -3.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fPosZ = 0.0f;
+												 
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fRotX = 0.1f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fRotZ = -0.7f;
 	}
 
 	else if (m_nKey == 1)
@@ -4071,7 +4084,7 @@ case MOTIONTYPE_MOVE:
 
 				break;
 
-				case MOTIONTYPE_UNFAIR_PUNCH:
+				case MOTIONTYPE_ADD_BLOOD:
 					//モーションunfairパンチ
 					if (m_nKey == 0)
 					{
@@ -4079,18 +4092,18 @@ case MOTIONTYPE_MOVE:
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = -0.1f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -1.3f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotZ = 0.2f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = 0.1f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotZ = 0.0f;
 
 						//ふたつ目のパーツ(体)
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.1f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.1f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotZ = 0.1f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = -0.3f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotZ = 0.0f;
 
 						//みっつ目のパーツ(頭)
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fPosX = 0.0f;
@@ -4098,7 +4111,7 @@ case MOTIONTYPE_MOVE:
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fPosZ = 0.0f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.7f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotZ = 0.0f;
 
 						//よっつ目のパーツ(左肩)
@@ -4106,18 +4119,18 @@ case MOTIONTYPE_MOVE:
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 0.2f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = -0.7f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.3f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = -0.4f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.0f;
 
 						//いつつ目のパーツ(左腕)
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = -0.4f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotY = -0.1f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotZ = 0.1f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = -0.2f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotZ = 0.0f;
 
 						//むっつ目のパーツ(左手)
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fPosX = 0.0f;
@@ -4125,48 +4138,48 @@ case MOTIONTYPE_MOVE:
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fPosZ = 0.0f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fRotY = 0.9f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fRotY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[5].m_fRotZ = 0.0f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.6f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.6f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = -0.2f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.3f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = 0.0f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.7f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = -0.2f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.2f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotZ = 0.0f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotX = -0.4f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotY = 0.1f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotZ = 0.1f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotX = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotZ = 0.0f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 0.2f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = -0.7f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotX = 1.4f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = -0.8f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosZ = 0.0f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.6f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = -1.0f;
 
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosX = 0.0f;
@@ -4174,8 +4187,8 @@ case MOTIONTYPE_MOVE:
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosZ = 0.0f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.8f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = -0.6f;
 
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[12].m_fPosX = 0.0f;
@@ -4190,33 +4203,41 @@ case MOTIONTYPE_MOVE:
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -0.3f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = -0.5f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = -0.4f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -0.8f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.9f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.2f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = -0.9f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = -1.6f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = -0.8f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = 0.1f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = -0.5f;
 
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosX = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosY = 0.0f;
 						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosZ = 0.0f;
 
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fRotY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fRotZ = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fRotX = 0.2f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fRotY = -0.3f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fRotZ = -0.2f;
+
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fPosX = -3.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fPosY = 0.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fPosZ = 0.0f;
+																
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fRotX = -0.1f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fRotY = -3.0f;
+						m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[17].m_fRotZ = -0.8f;
 					}
 
 					else if (m_nKey == 1)
@@ -5863,6 +5884,8 @@ case MOTIONTYPE_MOVE:
 				m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
 				m_nCounter = 0;
 				m_nFrameCnt = 0;
+
+				m_bAttack = false;
 			}
 
 			break;
@@ -5873,6 +5896,8 @@ case MOTIONTYPE_MOVE:
 				m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
 				m_nCounter = 0;
 				m_nFrameCnt = 0;
+
+				m_bAttack = false;
 			}
 
 			break;
@@ -5887,6 +5912,8 @@ case MOTIONTYPE_MOVE:
 				if (m_nKey == 0)
 				{
 					SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+
+					m_bAttack = false;
 				}
 			}
 			break;
@@ -5901,12 +5928,14 @@ case MOTIONTYPE_MOVE:
 				if (m_nKey == 0)
 				{
 					SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+
+					m_bAttack = false;
 				}
 			}
 
 			break;
 
-		case MOTIONTYPE_UNFAIR_PUNCH:
+		case MOTIONTYPE_ADD_BLOOD:
 			if (m_nFrameCnt >= 52)
 			{
 				m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
@@ -5916,6 +5945,8 @@ case MOTIONTYPE_MOVE:
 				if (m_nKey == 0)
 				{
 					SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+
+					m_bAttack = false;
 				}
 			}
 
@@ -5930,6 +5961,8 @@ case MOTIONTYPE_MOVE:
 				if (m_nKey == 0)
 				{
 					SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+
+					m_bAttack = false;
 				}
 			}
 
@@ -5945,6 +5978,8 @@ case MOTIONTYPE_MOVE:
 				if (m_nKey == 0)
 				{
 					SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+
+					m_bAttack = false;
 				}
 			}
 
@@ -5956,6 +5991,8 @@ case MOTIONTYPE_MOVE:
 				m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
 				m_nCounter = 0;
 				m_nFrameCnt = 0;
+
+				m_bAttack = false;
 			}
 
 			break;
@@ -6277,7 +6314,7 @@ bool CPlayer::HitEnemyPunch0(bool bDeath)
 
 				if (bDeath == false)
 				{
-					if (GetPosition().x + 12.0f >= pObjectx->GetPosition().x - 15.0f
+					if (GetPosition().x + 30.0f >= pObjectx->GetPosition().x - 30.0f
 						&& GetPosition().x - 20.0f <= pObjectx->GetPosition().x + 15.0f
 						&& GetPosition().y + 10.0f >= pObjectx->GetPosition().y - 20.0f
 						&& GetPosition().y - 10.0f <= pObjectx->GetPosition().y + 40.0f
@@ -6307,6 +6344,10 @@ bool CPlayer::HitEnemyPunch0(bool bDeath)
 								//死んだことにする
 								bDeath = true;
 
+								m_fBlood += 2.0f;
+
+								m_Gage_Blood->SetGageBlood(m_fBlood);
+
 								pEnemy->SetDeath(bDeath, m_nEnemy);
 
 								pObjectx->Uninit();
@@ -6323,6 +6364,10 @@ bool CPlayer::HitEnemyPunch0(bool bDeath)
 						else
 						{
 							pEnemy->AddDamage(3, m_nEnemy);
+
+							m_fBlood += 2.0f;
+
+							m_Gage_Blood->SetGageBlood(m_fBlood);
 
 							/*D3DXVECTOR3 move = GetMove();
 
@@ -6727,7 +6772,11 @@ bool CPlayer::HitPlayer(bool bDeath)
 						}
 						else
 						{
-							AddDamage(1);
+							AddDamage(10);
+
+							m_fLife -= 10.0f;
+
+							m_Gage_Life->SetGageLife(m_fLife);
 
 							D3DXVECTOR3 move = GetMove();
 
@@ -7026,147 +7075,154 @@ void CPlayer::SetMotionPlayer(MOTIONTYPE nType)
 
 	case MOTIONTYPE_MOVE:
 
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosZ = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotX = -0.1f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotZ = 0.0f;
+								  
+		//ふたつ目のパーツ(体)	
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotX = -0.2f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotZ = 0.0f;
+								 
+		//みっつ目のパーツ(頭)	
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosZ = 0.0f;
+								
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotZ = 0.0f;
+								  
+		//よっつ目のパーツ(左肩)	
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosZ = 0.0f;
+								
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotX = -0.1f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotZ = 0.2f;
+								 
+		//いつつ目のパーツ(左腕)	
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotX = -0.6f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotZ = 0.0f;
+								  
+		//むっつ目のパーツ(左手)	
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotZ = 0.0f;
+								
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotX = -0.3f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotZ = -0.2f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotX = -0.6f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotX = -0.1f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotZ = 0.0f;
+								
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotY = -0.5f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotZ = -1.1f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosZ = 0.0f;
+								
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotZ = -0.1f;
+								
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosZ = 0.0f;
+								
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotY = 1.3f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotZ = -0.2f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosZ = 0.0f;
+								
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotX = -0.4f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotY = -1.4f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotZ = 2.2f;
+								
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotX = -0.8f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotZ = -0.1f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotX = 0.9f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotZ = -1.3f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotX = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotX = -0.1f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotY = -0.9f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotZ = 0.0f;
-
-			//ふたつ目のパーツ(体)
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotY = 0.4f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotZ = 0.0f;
-			
-			//みっつ目のパーツ(頭)	 
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotY = 0.4f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotZ = 0.0f;
-			
-			//よっつ目のパーツ(左肩)	
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotX = 1.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotY = -0.7f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotZ = 0.5f;
-			
-			//いつつ目のパーツ(左腕)	
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotX = -0.9f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotY = -0.1f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotZ = -0.2f;
-			
-			//むっつ目のパーツ(左手)	
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotY = 0.9f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotX = 1.1f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotY = 0.6f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotZ = -0.2f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotX = -0.7f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotY = -0.2f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotX = -0.4f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotY = 0.1f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotZ = 0.1f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotY = 0.2f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotZ = -0.7f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotY = 1.6f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotY = 0.8f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotZ = 0.0f;
-			
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotY = -0.3f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotZ = 0.9f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotY = -0.2f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotZ = 0.2f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotY = -0.8f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosZ = 0.0f;
-			
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotY = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotZ = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fPosX = -3.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fPosY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fPosZ = 0.0f;
+								 
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fRotX = 0.1f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fRotY = 0.0f;
+		m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fRotZ = -0.7f;
 		
 		break;
 
@@ -7462,150 +7518,156 @@ void CPlayer::SetMotionPlayer(MOTIONTYPE nType)
 			
 				break;
 
-				case MOTIONTYPE_UNFAIR_PUNCH:
+				case MOTIONTYPE_ADD_BLOOD:
 					//モーションunfairパンチ
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosZ = 0.0f;
-												 
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotX = -0.1f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotY = -1.3f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotZ = 0.2f;
-												
-						//ふたつ目のパーツ(体)	
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotX = 0.1f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotY = 0.1f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotZ = 0.1f;
-												  
-						//みっつ目のパーツ(頭)	
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotY = 0.7f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotZ = 0.0f;
-												  
-						//よっつ目のパーツ(左肩)	
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotX = 0.2f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotY = -0.7f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotZ = 0.3f;
-												  
-						//いつつ目のパーツ(左腕)	
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotX = -0.4f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotY = -0.1f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotZ = 0.1f;
-												  
-						//むっつ目のパーツ(左手)	
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotY = 0.9f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotX = 0.6f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotY = 0.6f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotZ = -0.2f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotX = -0.7f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotY = -0.2f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotX = -0.4f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotY = 0.1f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotZ = 0.1f;
-												 
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotY = 0.2f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotZ = -0.7f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotY = 1.6f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotZ = 0.0f;
-												  
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotY = 0.8f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotZ = 0.0f;
-												  
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotY = -0.3f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotZ = -0.5f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotY = -0.2f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotY = 0.1f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosZ = 0.0f;
-												  
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotX = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotY = 0.0f;
-						m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotX = 0.1f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[0].m_fRotZ = 0.0f;
+											  
+					//ふたつ目のパーツ(体)	 
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotX = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[1].m_fRotZ = 0.0f;
+											  
+					//みっつ目のパーツ(頭)	 
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[2].m_fRotZ = 0.0f;
+											  
+					//よっつ目のパーツ(左肩)	
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotX = -0.4f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[3].m_fRotZ = 0.0f;
+											  
+					//いつつ目のパーツ(左腕)	
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotX = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[4].m_fRotZ = 0.0f;
+											  
+					//むっつ目のパーツ(左手)	
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[5].m_fRotZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotX = 0.3f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[6].m_fRotZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotX = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[7].m_fRotZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[8].m_fRotZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotX = 1.4f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[9].m_fRotZ = -0.8f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[10].m_fRotZ = -1.0f;
+											
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[11].m_fRotZ = -0.6f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fPosZ = 0.0f;
+											 
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[12].m_fRotZ = 0.0f;
+											 
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fPosZ = 0.0f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotX = -0.4f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotY = -0.8f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[13].m_fRotZ = 0.9f;
+											  
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fPosZ = 0.0f;
+											 
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotX = -0.9f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[14].m_fRotZ = -1.6f;
+											 
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fPosZ = 0.0f;
+											
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotX = -0.8f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotY = 0.1f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[15].m_fRotZ = -0.5f;
+											
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fPosZ = 0.0f;
+											 
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotX = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotY = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[16].m_fRotZ = -0.2f;
+											
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fPosX = -3.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fPosY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fPosZ = 0.0f;
+											
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fRotX = -0.1f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fRotY = -3.0f;
+					m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[17].m_fRotZ = -0.8f;
 					
 						break;
 

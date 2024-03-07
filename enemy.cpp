@@ -191,7 +191,7 @@ HRESULT CEnemy::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float 
 	m_apModel[15] = CModel::Create(D3DXVECTOR3(-5.7f, 0.0f, -0.5f), fRot, 15, fWidth, fHeight, 0);
 	m_apModel[16] = CModel::Create(D3DXVECTOR3(-6.0f, 0.0f, 0.0f), fRot, 16, fWidth, fHeight, 0);
 
-	for (int nCnt = 0; nCnt < MAX_PART; nCnt++)
+	for (int nCnt = 0; nCnt < 17; nCnt++)
 	{
 		m_InitPartPos[nCnt] = m_apModel[nCnt]->GetPos();
 	}
@@ -301,17 +301,17 @@ void CEnemy::Update(void)
 		{//“G‚ÌˆÊ’u(Z)‚ª0‚¾‚Á‚½‚ç
 			/*bShowenemy = true;
 
-			pobject3d->SetShowEnemy(bShowenemy);*/
-			if (nMove < 63 && nMove > 60)
-			{
-				move.x = 1.0f;
+			///*pobject3d->SetShowEnemy(bShowenemy);*/
+			//if (nMove < 63 && nMove > 60)
+			//{
+			//	move.x = 1.0f;
 
-				if (m_nType != MOTIONTYPE_MOVE)
-				{
-					SetMotionEnemy(MOTIONTYPE_MOVE);
-				}
-			}
-			if (nMove < 65 && nMove > 63)
+			//	if (m_nType != MOTIONTYPE_MOVE)
+			//	{
+			//		SetMotionEnemy(MOTIONTYPE_MOVE);
+			//	}
+			//}*/
+			/*if (nMove < 65 && nMove > 63)
 			{
 				move.x = -1.0f;
 
@@ -319,7 +319,7 @@ void CEnemy::Update(void)
 				{
 					SetMotionEnemy(MOTIONTYPE_MOVE);
 				}
-			}
+			}*/
 			if (nMove < 68 && nMove > 66)
 			{
 				m_bAttack = true;
@@ -382,10 +382,10 @@ void CEnemy::Update(void)
 				SetJump(m_bJump);
 			}
 
-			if (pos.x >= pPlayer->GetPosition().x)
+			/*if (pos.x >= pPlayer->GetPosition().x)
 			{
 				move.x = -2.0f;
-			}
+			}*/
 
 			pos += move;
 
@@ -435,7 +435,7 @@ void CEnemy::Update(void)
 		move.x = 0;
 	}
 
-	//
+	
 	//{//“G‚ÌˆÊ’u(Z)‚ª0ˆÈŠO‚¾‚Á‚½‚ç
 	//	if (m_pPlayer->GetPosition().x - 100.0f <= pos.x + 200.0f
 	//		&&m_pPlayer->GetPosition().x + 10.0f >= pos.x
@@ -456,8 +456,8 @@ void CEnemy::Update(void)
 
 	//		if (pos.z >= 8.0f && pos.z <= 11.0f)
 	//		{
-	//			CSound::PlaySound(CSound::SOUND_LABEL_SE_WINDOW);
-	//			CSound::PlaySound(CSound::SOUND_LABEL_SE_SCREAM);
+	//			/*CSound::PlaySound(CSound::SOUND_LABEL_SE_WINDOW);
+	//			CSound::PlaySound(CSound::SOUND_LABEL_SE_SCREAM);*/
 
 	//			CParticle::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 0.0f, 2, 20.0f, 20.0f);
 
@@ -487,8 +487,8 @@ void CEnemy::Update(void)
 
 	//		if (pos.z >= 8.0f && pos.z <= 11.0f)
 	//		{
-	//			CSound::PlaySound(CSound::SOUND_LABEL_SE_WINDOW);
-	//			CSound::PlaySound(CSound::SOUND_LABEL_SE_SCREAM);
+	//			/*CSound::PlaySound(CSound::SOUND_LABEL_SE_WINDOW);
+	//			CSound::PlaySound(CSound::SOUND_LABEL_SE_SCREAM);*/
 
 	//			CParticle::Create(D3DXVECTOR3(pos.x, pos.y, pos.z), 0.0f, 2, 20.0f, 20.0f);
 

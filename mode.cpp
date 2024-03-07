@@ -97,7 +97,7 @@ HRESULT CTitle::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	if (nTex == 0)
 	{//テクスチャの読み込み
 		D3DXCreateTextureFromFile(pDevice,
-			"data\\TEXTURE\\Fd_title.png",
+			"data\\TEXTURE\\kill_them_all_haikei4.png",
 			&m_pTexture);
 	}
 
@@ -325,7 +325,7 @@ HRESULT CStory::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	if (nTex == 0)
 	{//テクスチャの読み込み
 		D3DXCreateTextureFromFile(pDevice,
-			"data\\TEXTURE\\Fd_story.png",
+			"data\\TEXTURE\\story.png",
 			&m_pTexture);
 	}
 
@@ -544,7 +544,7 @@ HRESULT CTutorial::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	if (nTex == 0)
 	{//テクスチャの読み込み
 		D3DXCreateTextureFromFile(pDevice,
-			"data\\TEXTURE\\Fd_tutorial.png",
+			"data\\TEXTURE\\tutorial.png",
 			&m_pTexture);
 	}
 
@@ -841,21 +841,21 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 		return -1;
 	}
 	
-	//if (m_pEnemy == NULL)
-	//{//敵の生成
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(2600.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
-	//}
-	//else
-	//{
-	//	return -1;
-	//}
+	if (m_pEnemy == NULL)
+	{//敵の生成
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(2600.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
+	}
+	else
+	{
+		return -1;
+	}
 
 
 	//NULLチェック
 	if (m_pPlayer == NULL)
 	{
 		//プレイヤーの生成
-		m_pPlayer = CPlayer::Create(D3DXVECTOR3(-2600.0f, 2.0f, -10.0f), D3DX_PI * -0.5f, 1, 20.0f, 20.0f);
+		m_pPlayer = CPlayer::Create(D3DXVECTOR3(2000.0f, 2.0f, 0.0f), D3DX_PI * -0.5f, 1, 20.0f, 20.0f);
 	}
 	else
 	{

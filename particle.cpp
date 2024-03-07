@@ -47,7 +47,7 @@ void *CParticle::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 	case TYPE_DAMAGE:
 
 		//パーティクル(赤色)
-		ParticleRed(pos, D3DXVECTOR3(0.0f,300.0f,0.0f), D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), 10.0f,200);
+		ParticleRed(pos, D3DXVECTOR3(100.0f,0.0f,0.0f), D3DXCOLOR(1.0f,0.0f,0.0f,1.0f), 100.0f,10);
 
 		////パーティクル(黄色)
 		//ParticleYellow();
@@ -147,10 +147,10 @@ void CParticle::ParticleRed(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, fl
 	int nCntParticle = 0, nCntParticle1 = 0;
 
 	//パーティクルの生成
-	for (nCntParticle1 = 0; nCntParticle1 < USE_PARTICLE; nCntParticle1++)
+	for (nCntParticle1 = 0; nCntParticle1 < 1; nCntParticle1++)
 	{
 		//移動量の設定
-		move.x = sinf(((float)(rand() % 629 - 400.0f)) / 200) * ((float)(rand() % 300) / 50.0f + 1.0f);
+		move.x = sinf(((float)(rand() % 629 - 400)) / 200) * ((float)(rand() % 100) / 50.0f + 1.0f);
 		move.y = cosf(((float)(rand() % 629 - 200)) / 200) * ((float)(rand() % 400) / 50.0f + 1.0f);
 
 		//頂点カラーの設定
@@ -159,7 +159,7 @@ void CParticle::ParticleRed(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, fl
 		//半径の設定
 		m_fRadius = USE_RADIUS;
 
-		pEffect->Create(pos, 0.0f, 0,10.0f,10.0f,move * 10,col,nLife);
+		pEffect->Create(pos, 0.0f, 0,50.0f,50.0f,move * 2,col,nLife);
 	}
 }
 
